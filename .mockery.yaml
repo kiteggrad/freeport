@@ -1,0 +1,12 @@
+log-level: warn
+disable-version-string: true
+with-expecter: true
+dir: mocks/{{.InterfaceDirRelative}}
+mockname: "{{.InterfaceName | firstUpper}}"
+outpkg: "{{.PackageName}}_mocks"
+filename: '{{replaceAll (.InterfaceName | snakecase) "_i_ds_" "_ids_"}}.go'
+all: true
+packages:
+  github.com/kiteggrad/freeport:
+    config:
+      recursive: true

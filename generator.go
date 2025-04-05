@@ -10,19 +10,19 @@ import (
 var globGenerator = NewGenerator()
 
 type Generator struct {
-	used  map[int]struct{}
+	used  map[Port]struct{}
 	mutex sync.Mutex
 }
 
 func NewGenerator() *Generator {
 	return &Generator{
-		used:  map[int]struct{}{},
+		used:  map[Port]struct{}{},
 		mutex: sync.Mutex{},
 	}
 }
 
 // Get - returns free port that wasn't used before (from this generator).
-func (g *Generator) Get() (port int, err error) {
+func (g *Generator) Get() (port Port, err error) {
 	// max retries count to get unused port
 	const maxRetryCount = 10
 
@@ -46,7 +46,7 @@ func (g *Generator) Get() (port int, err error) {
 }
 
 // MustGet - returns free port that wasn't used before (from this generator) or panics.
-func (g *Generator) MustGet() (port int) {
+func (g *Generator) MustGet() (port Port) {
 	port, err := g.Get()
 	if err != nil {
 		panic(fmt.Errorf("failed to GetFreeport: %w", err))

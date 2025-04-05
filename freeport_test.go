@@ -14,7 +14,7 @@ func Test_Get(t *testing.T) {
 	require := require.New(t)
 
 	const triesCount = 1000
-	ports := make(map[int]bool, triesCount)
+	ports := make(map[Port]bool, triesCount)
 
 	for i := 0; i < triesCount; i++ {
 		port, err := Get()
@@ -31,11 +31,11 @@ func Test_Retry(t *testing.T) {
 	require := require.New(t)
 
 	const triesCount = 2
-	ports := make(map[int]bool, triesCount)
-	lastRequestedPort := 0
+	ports := make(map[Port]bool, triesCount)
+	var lastRequestedPort Port
 
 	i := 0
-	port, err := Retry(func(port int) error {
+	port, err := NewRetrier(nil, nil).Retry(t.Context(), func(port Port) error {
 		defer func() { i++ }()
 
 		require.False(ports[port])
@@ -50,5 +50,4 @@ func Test_Retry(t *testing.T) {
 	})
 	require.NoError(err)
 	require.Equal(lastRequestedPort, port)
-
 }
